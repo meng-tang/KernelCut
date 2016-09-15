@@ -10,7 +10,7 @@ make all
   <li>item 4</li>
 </ol>
 
-1.  build dependency libraries (maxflow and easybmp)
+1.  build dependency libraries (maxflow and easybmp)  
 ```{r, engine='bash'}
 cd libs
 make all
