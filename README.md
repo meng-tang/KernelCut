@@ -23,7 +23,6 @@ matlab -nojvm -nosplash -nodisplay -r "cd motionsegmentation/ducks01; computeopt
 ```
 Compute KNN graph for joint LAB + XY + M space
 ```{r, engine='bash'}
-&#35;Convert from RGB space to LAB space
 matlab -nojvm -nosplash -nodisplay -r "cd motionsegmentation/ducks01; getsubpixelimages"
 matlab -nojvm -nosplash -nodisplay -r "cd motionsegmentation/ducks01; computeknn"
 ```
