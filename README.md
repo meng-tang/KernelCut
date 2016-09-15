@@ -1,8 +1,8 @@
 Motion Segmentation using KernelCut
 
-  "Normalized Cut Meets MRF"
-  Meng Tang, Dmitrii Marin, Ismail Ben Ayed, Yuri Boykov
-  In European Conference on Computer Vision (ECCV), Amsterdam, the Netherlands, October, 2016
+	"Normalized Cut Meets MRF"
+	Meng Tang, Dmitrii Marin, Ismail Ben Ayed, Yuri Boykov
+	In European Conference on Computer Vision (ECCV), Amsterdam, the Netherlands, October, 2016
   
 Input image frames: directory "motionsegmentation/ducks01/images"  
 Initial Strokes for the first frame: directory "motionsegmentation/ducks01/seedsmulti"  
