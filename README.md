@@ -2,9 +2,12 @@ Input image frames: directory "motionsegmentation/ducks01/images"
 Initial Strokes for the first frame: directory "motionsegmentation/ducks01/seedsmulti"  
 Output segmentation: directory "motionsegmentation/ducks01/output"  
 
-1. build dependency libraries (maxflow and easybmp)  
-	cd libs
-	make all
+1. build dependency libraries (maxflow and easybmp)
+```{r, engine='bash'}
+cd libs
+make all
+```
+	
 2. build main program  
 	cd ../kernelcut
 	make main
