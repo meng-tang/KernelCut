@@ -1,6 +1,15 @@
 Input image frames: directory "motionsegmentation/ducks01/images"  
 Initial Strokes for the first frame: directory "motionsegmentation/ducks01/seedsmulti"  
 
+<ol start="0">
+  <li>build dependency libraries (maxflow and easybmp)
+```{r, engine='bash'}
+cd libs
+make all
+```</li>
+  <li>item 4</li>
+</ol>
+
 1.  build dependency libraries (maxflow and easybmp)
 ```{r, engine='bash'}
 cd libs
