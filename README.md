@@ -25,7 +25,6 @@ unzip pami2010Linux64.zip -d libs/LDOF
 ```
 Compute optical flow
 ```{r, engine='bash'}
-cd ../
 matlab -nojvm -nosplash -nodisplay -r "cd motionsegmentation/ducks01; computeopticalflow"
 ```
 Compute KNN graph for joint LAB + XY + M space
