@@ -16,6 +16,7 @@ Build main program
 ```{r, engine='bash'}
 cd ../kernelcut
 make main
+cd ../
 ```
 Download executable for optical flow
 ```{r, engine='bash'}
