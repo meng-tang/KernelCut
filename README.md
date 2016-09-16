@@ -42,25 +42,34 @@ chmod +x ./motionsegmentation/motion.sh
 Output segmentations are in the directory "motionsegmentation/ducks01/output".
 
 ## Image Clustering using Kernel Cut and Spectral Cut##
-download images:
+download images:  
+
     cd imageclustering
     wget http://people.csail.mit.edu/torralba/code/spatialenvelope/spatial_envelope_256x256_static_8outdoorcategories.zip
     unzip spatial_envelope_256x256_static_8outdoorcategories.zip -d images
     mv images/spatial_envelope_256x256_static_8outdoorcategories/* images/
-download feature extractor:
+    
+download feature extractor:  
+
     http://vision.stanford.edu/projects/objectbank/MATLAB_release.zip
     unzip MATLAB_release.zip -d ./
     mv MATLAB_release object-bank
-extract features and compute Gaussian kernel:
+extract features and compute Gaussian kernel:  
+
     matlab -nojvm -nosplash -nodisplay -r "computegaussiankernel"
-compute eigenvalues:
+compute eigenvalues:  
+
     matlab -nojvm -nosplash -nodisplay -r "eigen_labelme"
-prepare ground truth labels:
+prepare ground truth labels:  
+
     matlab -nojvm -nosplash -nodisplay -r "preparelabels"
-spectral clustering:
+spectral clustering:  
+
     matlab -nojvm -nosplash -nodisplay -r "sc_labelme"
-kernel k-means:
+kernel k-means:  
+
     matlab -nojvm -nosplash -nodisplay -r "kkm_labelme"
-kernel cut:
+kernel cut:  
+
     matlab -nojvm -nosplash -nodisplay -r "kcut_labelme"
 
