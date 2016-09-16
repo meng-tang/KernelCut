@@ -38,5 +38,5 @@ Go to motionsegmentation/motion.sh, change codepath, and run script
 chmod +x ./motionsegmentation/motion.sh
 ./motionsegmentation/motion.sh
 ```
-Output segmentations are directory "motionsegmentation/ducks01/output".
+Output segmentations are in the directory "motionsegmentation/ducks01/output".
 
