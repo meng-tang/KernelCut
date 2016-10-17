@@ -54,6 +54,10 @@ Download feature extractor:
     http://vision.stanford.edu/projects/objectbank/MATLAB_release.zip
     unzip MATLAB_release.zip -d ./
     mv MATLAB_release object-bank
+Change the variable "modelpath" in getFeatureOB.m accordingly and move the file:  
+
+    mv getFeatureOB.m object-bank/code/partless/
+    
 Extract features and compute Gaussian kernel:  
 
     matlab -nojvm -nosplash -nodisplay -r "computegaussiankernel"
