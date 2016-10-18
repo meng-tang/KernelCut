@@ -51,7 +51,7 @@ Download images:
     
 Download feature extractor:  
 
-    http://vision.stanford.edu/projects/objectbank/MATLAB_release.zip
+    wget http://vision.stanford.edu/projects/objectbank/MATLAB_release.zip
     unzip MATLAB_release.zip -d ./
     mv MATLAB_release object-bank
 Change the variable "modelpath" in getFeatureOB.m accordingly and move the file:  
