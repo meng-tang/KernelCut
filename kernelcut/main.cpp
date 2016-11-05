@@ -7,19 +7,13 @@
 #include <EasyBMP.h>
 #include "basicutil.h"
 
-#include "util.h"
-#include "kmode.h"
-#include "grabcut.h"
-#include "hdgrabcut.h"
 #include "ncutknn.h"
 #include "ncutknnmulti.h"
 #include "aaknn.h"
-#include "kmeans.h"
-#include "grabcutgmm.h"
 
-enum Method {KMODE, GRABCUT, PATCHGRABCUT, NCUTKNN, KMEANS, EKMEANS, AAKNN, GRABCUTGMM, NCUTKNNMULTI};
+enum Method {NCUTKNN, AAKNN, NCUTKNNMULTI};
 Method method;
-enum UserInput {BOX, SEEDS, FROMGT,FROMIMG};
+enum UserInput {BOX, SEEDS, FROMIMG};
 UserInput userinput = BOX;
 enum ErrorMeasure {ERRORRATE, FMEASURE, JACCARD, NOMEASURE};
 ErrorMeasure errormeasure = ERRORRATE;
@@ -28,7 +22,7 @@ int main(int argc, char * argv[])
 {
     srand( (unsigned)time( NULL ) );
     double totaltime = 0; // timing
-    const char * UsageStr = "Usage: main -d DBdirectory -i imagename -m method [-o outputdirectory] [-w width_R width_G width_B] [-s w_smoothness] [-e errormeasure] [-u userinput] [-h on or off (hardconstraints)] [-b binsize] [-x xybinsize] [-k knn_k knnfiledirectory] [-p patchsize (for HD grabcut)] [-g number_of_gaussian_components]\n";
+    const char * UsageStr = "Usage: main -d DBdirectory -i imagename -m method [-o outputdirectory] [-w width_R width_G width_B] [-s w_smoothness] [-e errormeasure] [-u userinput] [-h on or off (hardconstraints)] [-b binsize] [-x xybinsize] [-k knn_k knnfiledirectory] [-g number_of_gaussian_components]\n";
     bool hardconstraintsflag = true;
     char * dbdir = NULL, * imgname = NULL, * methodstr = NULL, * outputdir = NULL;
     char * knnfiledir = NULL;
@@ -61,28 +55,11 @@ int main(int argc, char * argv[])
                 break;
             case 'm':
                 methodstr = argv[optind];
-                if(0 == strcmp(argv[optind],"kmode"))
-                    method = KMODE;
-                else if(0 == strcmp(argv[optind],"grabcut")){
-                    method = GRABCUT;
-                }
-                else if(0 == strcmp(argv[optind],"ncutknn")){
+                if(0 == strcmp(argv[optind],"ncutknn")){
                     method = NCUTKNN;
-                }
-                else if(0 == strcmp(argv[optind],"kmeans")){
-                    method = KMEANS;
-                }
-                else if(0 == strcmp(argv[optind],"ekmeans")){
-                    method = EKMEANS;
                 }
                 else if(0 == strcmp(argv[optind],"aaknn")){
                     method = AAKNN;
-                }
-                else if(0 == strcmp(argv[optind],"patchgrabcut")){
-                    method = PATCHGRABCUT;
-                }
-                else if(0 == strcmp(argv[optind],"grabcutgmm")){
-                    method = GRABCUTGMM;
                 }
                 else if(0 == strcmp(argv[optind],"ncutknnmulti")){
                     method = NCUTKNNMULTI;
@@ -111,8 +88,6 @@ int main(int argc, char * argv[])
                     userinput = BOX;
                 else if(0 == strcmp(argv[optind],"seeds"))
                     userinput = SEEDS;
-                else if(0 == strcmp(argv[optind],"fromgt"))
-                    userinput = FROMGT;
                 else if(0 == strcmp(argv[optind],"fromimage")){
                     userinput = FROMIMG;
                     initlabelingimgpath = argv[optind+1];
@@ -246,9 +221,6 @@ int main(int argc, char * argv[])
 	        }
             hardconstraints = initlabeling;
         }
-        else if(FROMGT == userinput){
-            initlabeling = getinitlabeling(loadImage<RGB>((dbdir+string("/groundtruth/")+string(shortname) + string(".bmp")).c_str()),255,0);
-        }
         
         Table2D<int> initlabeling_multi(imgw,imgh,0); // for multilabel
         const int numColor = 6;
@@ -286,19 +258,7 @@ int main(int argc, char * argv[])
 	    Table2D<Label> solution;
 	    Table2D<int> solution_multi;
 	   
-	    if(method == KMODE){            
-	        solution = kmodesegmentation(image, floatimg, kernelwidth, w_smooth, initlabeling, hardconstraints);
-	    }
-	    else if(method == GRABCUT){
-	        solution = grabcutsegmentation(image, binsize, xybinsize,w_smooth, initlabeling, hardconstraints);
-        }
-	     else if(method == PATCHGRABCUT)
-	        solution = patchgrabcutsegmentation(image, binsize, patchsize , w_smooth, initlabeling, hardconstraints);
-	    else if(method == KMEANS)
-	        solution = kmeanssegmentation(image, floatimg, w_smooth, initlabeling, hardconstraints);
-	    else if(method == EKMEANS)
-	        solution = kmeanssegmentation(image, floatimg, w_smooth, initlabeling, hardconstraints,true);
-	    else if(method == NCUTKNN){
+	    if(method == NCUTKNN){
             solution = ncutknnsegmentation(image, knntable, w_smooth, initlabeling, hardconstraints);
             knntable.resize(1,1);
 	    }
@@ -310,9 +270,7 @@ int main(int argc, char * argv[])
             solution_multi = ncutknnmultisegmentation(image, knntable, w_smooth, initlabeling_multi, numColor);
             knntable.resize(1,1);
 	    }
-	    else if(method == GRABCUTGMM)
-	        solution = grabcutgmmsegmentation(image, floatimg, num_comps, w_smooth, initlabeling, hardconstraints);
-        clock_t finish = clock();
+	    clock_t finish = clock();
         double timeforoneimage = (double)(finish-start)/CLOCKS_PER_SEC;
         totaltime += timeforoneimage;
         
