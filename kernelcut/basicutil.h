@@ -7,8 +7,8 @@
 #include <vector>
 
 #include <graph.h>
-#include "Table2D.h"
-#include "Image2D.h"
+#include "ezi/Table2D.h"
+#include "ezi/Image2D.h"
 #include "Image.h"
 
 #include "dirent.h"

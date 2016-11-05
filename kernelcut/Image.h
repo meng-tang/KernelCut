@@ -1,6 +1,6 @@
 #pragma once
-#include "Image2D.h"
-#include "Table2D.h"
+#include "ezi/Image2D.h"
+#include "ezi/Table2D.h"
 #include "SparseMatrix.h"
 #include <assert.h>
 

@@ -9,9 +9,8 @@
 
 #include "ncutknn.h"
 #include "ncutknnmulti.h"
-#include "aaknn.h"
 
-enum Method {NCUTKNN, AAKNN, NCUTKNNMULTI};
+enum Method {NCUTKNN, NCUTKNNMULTI};
 Method method;
 enum UserInput {BOX, SEEDS, FROMIMG};
 UserInput userinput = BOX;
@@ -57,9 +56,6 @@ int main(int argc, char * argv[])
                 methodstr = argv[optind];
                 if(0 == strcmp(argv[optind],"ncutknn")){
                     method = NCUTKNN;
-                }
-                else if(0 == strcmp(argv[optind],"aaknn")){
-                    method = AAKNN;
                 }
                 else if(0 == strcmp(argv[optind],"ncutknnmulti")){
                     method = NCUTKNNMULTI;
@@ -234,7 +230,7 @@ int main(int argc, char * argv[])
         
         if(hardconstraintsflag==false) hardconstraints.reset(NONE);
         
-        if(method == NCUTKNN || method == AAKNN || method == NCUTKNNMULTI){
+        if(method == NCUTKNN || method == NCUTKNNMULTI){
             char knnfile[100] = {0};
             strcat(knnfile,knnfiledir);
             strcat(knnfile,"/");
@@ -260,10 +256,6 @@ int main(int argc, char * argv[])
 	   
 	    if(method == NCUTKNN){
             solution = ncutknnsegmentation(image, knntable, w_smooth, initlabeling, hardconstraints);
-            knntable.resize(1,1);
-	    }
-	    else if(method == AAKNN){
-            solution = aaknnsegmentation(image, knntable, w_smooth, initlabeling, hardconstraints);
             knntable.resize(1,1);
 	    }
 	    else if(method == NCUTKNNMULTI){
