@@ -50,11 +50,11 @@ int main(int argc, char * argv[])
             case 'n':
                 numSegments = atoi(argv[optind]);
                 if(2 == numSegments){
-                    methodstr = "NCUTKNNBINARY";
+                    methodstr = "ncutknnbinary";
                     method = NCUTKNNBINARY;
                 }
                 else if(2 < numSegments){
-                    methodstr = "NCUTKNNMULTI";
+                    methodstr = "ncutknnmulti";
                     method = NCUTKNNMULTI;
                 }
                 else{
