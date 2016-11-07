@@ -27,12 +27,12 @@ unzip pami2010Linux64.zip -d libs/LDOF
 Compute optical flow
 ```{r, engine='bash'}
 chmod +x libs/LDOF/ldof
-matlab -nojvm -nosplash -nodisplay -r "cd motionsegmentation/ducks01; computeopticalflow"
+matlab -nojvm -nosplash -nodisplay -r "cd motionsegmentation/ducks01; computeopticalflow; exit()"
 ```
 Compute KNN graph for joint LAB + XY + M space
 ```{r, engine='bash'}
-matlab -nojvm -nosplash -nodisplay -r "cd motionsegmentation/ducks01; getsubpixelimages"
-matlab -nojvm -nosplash -nodisplay -r "cd motionsegmentation/ducks01; computeknn"
+matlab -nojvm -nosplash -nodisplay -r "cd motionsegmentation/ducks01; getsubpixelimages; exit();"
+matlab -nojvm -nosplash -nodisplay -r "cd motionsegmentation/ducks01; computeknn; exit()"
 ```
 Go to motionsegmentation/motion.sh, change codepath, and run script
 ```{r, engine='bash'}
@@ -60,24 +60,24 @@ Change the variable "modelpath" in getFeatureOB.m accordingly and move the file:
     
 Extract features and compute Gaussian kernel:  
 
-    matlab -nojvm -nosplash -nodisplay -r "computegaussiankernel"
+    matlab -nojvm -nosplash -nodisplay -r "computegaussiankernel; exit()"
 Compute eigenvalues:  
 
-    matlab -nojvm -nosplash -nodisplay -r "eigen_labelme"
+    matlab -nojvm -nosplash -nodisplay -r "eigen_labelme; exit()"
 Prepare ground truth labels:  
 
-    matlab -nojvm -nosplash -nodisplay -r "preparelabels"
+    matlab -nojvm -nosplash -nodisplay -r "preparelabels; exit()"
 Spectral clustering:  
 
-    matlab -nojvm -nosplash -nodisplay -r "sc_labelme"
+    matlab -nojvm -nosplash -nodisplay -r "sc_labelme; exit()"
 Spectral cut:  
 
-    matlab -nojvm -nosplash -nodisplay -r "sc_labelme"
+    matlab -nojvm -nosplash -nodisplay -r "sc_labelme; exit()"
 Kernel k-means:  
 
-    matlab -nojvm -nosplash -nodisplay -r "kkm_labelme"
+    matlab -nojvm -nosplash -nodisplay -r "kkm_labelme; exit()"
 Kernel cut:  
 
-    matlab -nojvm -nosplash -nodisplay -r "kcut_labelme"
+    matlab -nojvm -nosplash -nodisplay -r "kcut_labelme; exit()"
 These matlab scripts will report NMI (normalized mutual information) values for clustering obtained.
 
