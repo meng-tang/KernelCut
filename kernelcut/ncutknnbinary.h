@@ -2,9 +2,9 @@
 #define _NCUTKNN_H_
 #include "knn.h"
 #include "PPBCncut.h"
-Table2D<Label> ncutknnsegmentation(const Image & image, Table2D<int> & knntable, double w_smooth, Table2D<Label> initlabeling, Table2D<Label> hardconstraints, bool PBO = false);
+Table2D<Label> ncutknnbinarysegmentation(const Image & image, Table2D<int> & knntable, double w_smooth, Table2D<Label> initlabeling, Table2D<Label> hardconstraints, bool PBO = false);
 
-Table2D<Label> ncutknnsegmentation(const Image & image, Table2D<int> & knntable, double w_smooth, Table2D<Label> initlabeling, Table2D<Label> hardconstraints, bool PBO)
+Table2D<Label> ncutknnbinarysegmentation(const Image & image, Table2D<int> & knntable, double w_smooth, Table2D<Label> initlabeling, Table2D<Label> hardconstraints, bool PBO)
 {
     int KNN_K = knntable.getHeight();
     int img_w = image.img_w;

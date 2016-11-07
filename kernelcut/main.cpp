@@ -7,10 +7,10 @@
 #include <EasyBMP.h>
 #include "basicutil.h"
 
-#include "ncutknn.h"
+#include "ncutknnbinary.h"
 #include "ncutknnmulti.h"
 
-enum Method {NCUTKNN, NCUTKNNMULTI};
+enum Method {NCUTKNNBINARY, NCUTKNNMULTI};
 Method method;
 enum UserInput {BOX, SEEDS, FROMIMG};
 UserInput userinput = BOX;
@@ -21,19 +21,14 @@ int main(int argc, char * argv[])
 {
     srand( (unsigned)time( NULL ) );
     double totaltime = 0; // timing
-    const char * UsageStr = "Usage: main -d DBdirectory -i imagename -m method [-o outputdirectory] [-w width_R width_G width_B] [-s w_smoothness] [-e errormeasure] [-u userinput] [-h on or off (hardconstraints)] [-b binsize] [-x xybinsize] [-k knn_k knnfiledirectory] [-g number_of_gaussian_components]\n";
+    const char * UsageStr = "Usage: main -d DBdirectory -i imagename -n numberofSegmengts [-o outputdirectory] [-s w_smoothness] [-e errormeasure] [-u userinput] [-h on or off (hardconstraints)] [-k knn_k knnfiledirectory]\n";
     bool hardconstraintsflag = true;
     char * dbdir = NULL, * imgname = NULL, * methodstr = NULL, * outputdir = NULL;
     char * knnfiledir = NULL;
     char * initlabelingimgpath = NULL;
     Table2D<int> knntable;
-    double kernelwidth[3];
     double w_smooth = 0;
-    double binsize = 16.0;
-    int xybinsize=0;
-    int patchsize = 1;
-    int num_comps = 5; // number of components for GMM
-    int KNN_K;
+    int KNN_K, numSegments;
     if(argc == 1){ 
         printf("%s",UsageStr);
         exit(-1);
@@ -44,7 +39,7 @@ int main(int argc, char * argv[])
     printf("\n");
     
     int opt;
-    while((opt = getopt(argc, argv, "dimeuowshbxkpg")) != -1){
+    while((opt = getopt(argc, argv, "dineuowshbxkpg")) != -1){
         switch(opt){
             case 'd':
                 dbdir = argv[optind];
@@ -52,16 +47,18 @@ int main(int argc, char * argv[])
             case 'i':
                 imgname = argv[optind];
                 break;
-            case 'm':
-                methodstr = argv[optind];
-                if(0 == strcmp(argv[optind],"ncutknn")){
-                    method = NCUTKNN;
+            case 'n':
+                numSegments = atoi(argv[optind]);
+                if(2 == numSegments){
+                    methodstr = "NCUTKNNBINARY";
+                    method = NCUTKNNBINARY;
                 }
-                else if(0 == strcmp(argv[optind],"ncutknnmulti")){
+                else if(2 < numSegments){
+                    methodstr = "NCUTKNNMULTI";
                     method = NCUTKNNMULTI;
                 }
                 else{
-                    printf("method not valid!\n");
+                    printf("number of segments not valid!\n");
                     exit(-1);
                 }
                 break;
@@ -106,26 +103,9 @@ int main(int argc, char * argv[])
                     hardconstraintsflag = false;
                 }
                 break;
-            case 'w':
-                kernelwidth[0] = atof(argv[optind]);
-                kernelwidth[1] = atof(argv[optind + 1]);
-                kernelwidth[2] = atof(argv[optind + 2]);
-                break;
-            case 'b':
-                binsize = atof(argv[optind]);
-                break;
-            case 'x':
-                xybinsize = atoi(argv[optind]);
-                break;
-            case 'p':
-                patchsize = atoi(argv[optind]);
-                break;
             case 'k':
                 KNN_K = atoi(argv[optind]);
                 knnfiledir = argv[optind+1];
-                break;
-            case 'g':
-                num_comps = atoi(argv[optind]);
                 break;
             default: /* '?' */
                 fprintf(stderr, "%s", UsageStr);
@@ -136,169 +116,120 @@ int main(int argc, char * argv[])
         printf("database %s\nimage %s\nmethod %s\n", dbdir, imgname, methodstr);
     else
         printf("%s",UsageStr);
-        
-    int numimg = 0;
-    if(0==strcmp(imgname,"all"))
-        numimg = countFilesInDirectory((dbdir+string("/images")).c_str());
-    else
-        numimg = 1;
 
-    // read directory
-	DIR *dpdf;
-    struct dirent *epdf;
-    dpdf = opendir((dbdir+string("/images")).c_str());
-    if (dpdf == NULL) {
-       printf("directory %s\n",(dbdir+string("/images")).c_str()); 
-       printf("directory empty!\n"); 
-       exit(-1);
+
+    printf("image : %s\n",imgname);
+        
+    // Read the RGB image
+    Image image = Image((dbdir+string("/images/")+string(imgname) + string(".bmp")).c_str(),imgname,16,8);
+        
+    int imgw = image.img_w;
+    int imgh = image.img_h;
+        
+            
+    // Initial labeling
+    Table2D<Label> initlabeling(imgw,imgh,NONE);
+    Table2D<Label> hardconstraints(imgw,imgh,NONE);
+    if(BOX == userinput){
+        initlabeling = getinitlabeling(loadImage<RGB>((dbdir+string("/boxes/")+string(imgname) + string(".bmp")).c_str()),0);
+        for(int i=0;i<imgw;i++){
+	    for(int j=0;j<imgh;j++){
+	        if(initlabeling[i][j]==BKG) hardconstraints[i][j] = BKG;
+		else hardconstraints[i][j] = NONE;
+            }
+        }
+        //image.addboxsmooth(getROI(hardconstraints,NONE));
     }
-    int imgid=0;
-    double * measures = new double[numimg];
-    while (epdf = readdir(dpdf)){
-        char filename[20];
-        strcpy(filename,epdf->d_name);
-        if(strlen(filename)<=2) continue;
-        char * shortname = (char *) malloc(strlen(filename)-3);
-        strncpy(shortname,filename,strlen(filename)-4);
-        shortname[strlen(filename)-4]='\0';
-
-        if(strcmp(imgname,"all") != 0 && strcmp(imgname, shortname) != 0)
-            continue;
-        printf("image %d : %s\n",imgid,shortname);
+    else if((SEEDS == userinput) && (method != NCUTKNNMULTI)){
+        initlabeling = getinitlabelingFB(loadImage<RGB>((dbdir+string("/seeds/")+string(imgname) + string(".bmp")).c_str()), red, blue);
+        hardconstraints = initlabeling;
+    }
+    else if(FROMIMG == userinput){
+        Table2D<RGB> initlabelingimg = loadImage<RGB>(initlabelingimgpath);
+        for(int i=0;i<imgw;i++){
+            for(int j=0;j<imgh;j++){
+	        if(initlabelingimg[i][j]==white)
+		    initlabeling[i][j] = BKG;
+	        else
+	           initlabeling[i][j] = OBJ;
+	    }
+	}
+        hardconstraints = initlabeling;
+    }
         
-        // Read the RGB image
-        Image image = Image((dbdir+string("/images/")+string(shortname) + string(".bmp")).c_str(),shortname,binsize,8);
+    Table2D<int> initlabeling_multi(imgw,imgh,0); // for multilabel
+    RGB colors[6] = {white,red,green,blue,black,navy};
+    if(method == NCUTKNNMULTI){
+        if(userinput == SEEDS)
+            initlabeling_multi = getinitlabelingMULTI(loadImage<RGB>((dbdir+string("/seedsmulti/")+string(imgname) + string(".bmp")).c_str()), colors, numSegments);
+        else if(userinput == FROMIMG)
+            initlabeling_multi = getinitlabelingMULTI(loadImage<RGB>(initlabelingimgpath), colors, numSegments);
+        hardconstraints = initlabeling_multi;
+    }
         
-        int imgw = image.img_w;
-        int imgh = image.img_h;
-        // read subpixel images
-        Table2D<Vect3D> floatimg(imgw,imgh);
-        Table2D<double> column_img;
-        readbinfile(column_img, (dbdir+string("/subpixelimages/")+string(shortname) + string(".bin")).c_str(), 1, imgh*imgw*3);
-        int idx = 0;
-        for(int c=0;c<3;c++){
-            for(int i=0;i<imgw;i++){
-                for(int j=0;j<imgh;j++){
-                    if(c==0) floatimg[i][j].x = column_img[0][idx++];
-                    if(c==1) floatimg[i][j].y = column_img[0][idx++];
-                    if(c==2) floatimg[i][j].z = column_img[0][idx++];
-                }
-            }
+    if(hardconstraintsflag==false) hardconstraints.reset(NONE);
+        
+    // read knn graph
+    if(method == NCUTKNNBINARY || method == NCUTKNNMULTI){
+        char knnfile[100] = {0};
+        strcat(knnfile,knnfiledir);
+        strcat(knnfile,"/");
+        strcat(knnfile,imgname);
+        strcat(knnfile,".bin");
+        //printf("knn file path:%s\n",knnfile);
+        //read knn table
+        Table2D<int> temp_knntable; 
+        readbinfile(temp_knntable,knnfile, KNN_K/*8*/,imgw * imgh);
+        knntable = Table2D<int>(imgw*imgh,KNN_K); // index from zero, KNN_K rows
+        for(int i=0;i<KNN_K;i++){
+	    for(int j=0;j<imgw*imgh;j++){
+	        knntable[j][i] = temp_knntable[i/*8*/][j]-1; // make index start from zero
+	    }
         }
+        temp_knntable.resize(1,1);
+    }
             
-        // Initial labeling
-        Table2D<Label> initlabeling(imgw,imgh,NONE);
-        Table2D<Label> hardconstraints(imgw,imgh,NONE);
-        if(BOX == userinput){
-            initlabeling = getinitlabeling(loadImage<RGB>((dbdir+string("/boxes/")+string(shortname) + string(".bmp")).c_str()),0);
-            for(int i=0;i<imgw;i++){
-			    for(int j=0;j<imgh;j++){
-				    if(initlabeling[i][j]==BKG) hardconstraints[i][j] = BKG;
-				    else hardconstraints[i][j] = NONE;
-			    }
-		    }
-		    //image.addboxsmooth(getROI(hardconstraints,NONE));
-		}
-        else if((SEEDS == userinput) && (method != NCUTKNNMULTI)){
-            initlabeling = getinitlabelingFB(loadImage<RGB>((dbdir+string("/seeds/")+string(shortname) + string(".bmp")).c_str()), red, blue);
-            hardconstraints = initlabeling;
-        }
-        else if(FROMIMG == userinput){
-            Table2D<RGB> initlabelingimg = loadImage<RGB>(initlabelingimgpath);
-            for(int i=0;i<imgw;i++)
-	        {
-		        for(int j=0;j<imgh;j++)
-		        {
-			        if(initlabelingimg[i][j]==white)
-				        initlabeling[i][j] = BKG;
-			        else
-				        initlabeling[i][j] = OBJ;
-		        }
-	        }
-            hardconstraints = initlabeling;
-        }
-        
-        Table2D<int> initlabeling_multi(imgw,imgh,0); // for multilabel
-        const int numColor = 6;
-        RGB colors[numColor] = {white,red,green,blue,black,navy};
-        if(method == NCUTKNNMULTI){
-            if(userinput == SEEDS)
-                initlabeling_multi = getinitlabelingMULTI(loadImage<RGB>((dbdir+string("/seedsmulti/")+string(shortname) + string(".bmp")).c_str()), colors, numColor);
-            else if(userinput == FROMIMG)
-                initlabeling_multi = getinitlabelingMULTI(loadImage<RGB>(initlabelingimgpath), colors, numColor);
-        }
-        
-        if(hardconstraintsflag==false) hardconstraints.reset(NONE);
-        
-        if(method == NCUTKNN || method == NCUTKNNMULTI){
-            char knnfile[100] = {0};
-            strcat(knnfile,knnfiledir);
-            strcat(knnfile,"/");
-            strcat(knnfile,shortname);
-            strcat(knnfile,".bin");
-            //printf("knn file path:%s\n",knnfile);
-            //read knn table
-            Table2D<int> temp_knntable; 
-            readbinfile(temp_knntable,knnfile, KNN_K/*8*/,imgw * imgh);
-            knntable = Table2D<int>(imgw*imgh,KNN_K); // index from zero, KNN_K rows
-            for(int i=0;i<KNN_K;i++){
-                for(int j=0;j<imgw*imgh;j++){
-                    knntable[j][i] = temp_knntable[i/*8*/][j]-1;
-                }
-            }
-            temp_knntable.resize(1,1);
-        }
-            
-        // run for each image
-        clock_t start = clock();
-	    Table2D<Label> solution;
-	    Table2D<int> solution_multi;
+    clock_t start = clock();
+    Table2D<Label> solution;
+    Table2D<int> solution_multi;
 	   
-	    if(method == NCUTKNN){
-            solution = ncutknnsegmentation(image, knntable, w_smooth, initlabeling, hardconstraints);
-            knntable.resize(1,1);
-	    }
-	    else if(method == NCUTKNNMULTI){
-            solution_multi = ncutknnmultisegmentation(image, knntable, w_smooth, initlabeling_multi, numColor);
-            knntable.resize(1,1);
-	    }
-	    clock_t finish = clock();
-        double timeforoneimage = (double)(finish-start)/CLOCKS_PER_SEC;
-        totaltime += timeforoneimage;
+    if(method == NCUTKNNBINARY){
+        solution = ncutknnbinarysegmentation(image, knntable, w_smooth, initlabeling, hardconstraints);
+        knntable.resize(1,1);
+    }
+    else if(method == NCUTKNNMULTI){
+        solution_multi = ncutknnmultisegmentation(image, knntable, w_smooth, initlabeling_multi, numSegments);
+        knntable.resize(1,1);
+    }
+    clock_t finish = clock();
+    totaltime = (double)(finish-start)/CLOCKS_PER_SEC;
         
-        // save output
-	    if((outputdir!=NULL) &&( method != NCUTKNNMULTI))
-	        //savebinarylabeling(image.img, solution,(outputdir+string("/")+string(shortname) +"_s"+pch::to_string(w_smooth)+string(".bmp")).c_str());
-	        savebinarylabeling(image.img, solution,(outputdir+string("/")+string(shortname) +string("_")+string(methodstr)+"_s"+pch::to_string(w_smooth)+string(".bmp")).c_str());
-	    
-	    if((outputdir!=NULL) &&( method == NCUTKNNMULTI)){
-	        savemultilabeling(solution_multi,(outputdir+string("/")+string(shortname) +string("_")+string(methodstr)+"_s"+pch::to_string(w_smooth)+string(".bmp")).c_str(), colors,image.img);
-	    }
-        // measures
-        if(NOMEASURE == errormeasure){
-            imgid++;
-            free(shortname);
-            continue;
-        }
+    // save output
+    if((outputdir!=NULL) &&( method != NCUTKNNMULTI))
+        //savebinarylabeling(image.img, solution,(outputdir+string("/")+string(imgname) +"_s"+pch::to_string(w_smooth)+string(".bmp")).c_str());
+	savebinarylabeling(image.img, solution,(outputdir+string("/")+string(imgname) +string("_")+string(methodstr)+"_s"+pch::to_string(w_smooth)+string(".bmp")).c_str());
+    if((outputdir!=NULL) &&( method == NCUTKNNMULTI))
+	savemultilabeling(solution_multi,(outputdir+string("/")+string(imgname) +string("_")+string(methodstr)+"_s"+pch::to_string(w_smooth)+string(".bmp")).c_str(), colors,image.img);
+
+    // measures
+    if(NOMEASURE != errormeasure)
+    {
         // ground truth
-        Table2D<Label> gt = getinitlabeling(loadImage<RGB>((dbdir+string("/groundtruth/")+string(shortname) + string(".bmp")).c_str()),255,0);
+        Table2D<Label> gt = getinitlabeling(loadImage<RGB>((dbdir+string("/groundtruth/")+string(imgname) + string(".bmp")).c_str()),255,0);
+        double measure;
         if(ERRORRATE == errormeasure){
-            if( userinput == BOX && hardconstraintsflag )
-                measures[imgid] = geterrorcount(solution,gt)/ (double) countintable(hardconstraints,NONE);
-            else
-                measures[imgid] = geterrorcount(solution,gt)/ (double)(imgw*imgh);
+	    if( userinput == BOX && hardconstraintsflag )
+	        measure = geterrorcount(solution,gt)/ (double) countintable(hardconstraints,NONE);
+	    else
+	        measure = geterrorcount(solution,gt)/ (double)(imgw*imgh);
         }
         else if(JACCARD == errormeasure)
-            measures[imgid] = jaccard(solution, gt, OBJ);
+	    measure = jaccard(solution, gt, OBJ);
         else if(FMEASURE == errormeasure)
-            measures[imgid] = fmeasure(solution, gt, OBJ);
-        printf("measure %.3f\n",measures[imgid]);
-        imgid++;
-        free(shortname);
+	    measure = fmeasure(solution, gt, OBJ);
+        printf("measure %.3f\n",measure);
     }
-	printf("average measure %.3f\n", arrayMean(measures, numimg));
-    
-    //}
+
     cout<<"time for segmentation "<<totaltime<<" seconds!"<<endl;
     return -1;
 }
