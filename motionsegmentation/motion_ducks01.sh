@@ -19,7 +19,7 @@ do
     else
         userinput="-u fromimage $outdir/ducks01_${preframe}_ncutknnmulti_s$lambda.bmp"
     fi
-    argv="-d $exppath -i ducks01_$frame -m ncutknnmulti -e nomeasure -h off -o $outdir -k 50 $exppath/knn -s $lambda $userinput"
+    argv="-d $exppath -i ducks01_$frame -n 6 -e nomeasure -h off -o $outdir -k 50 $exppath/knn -s $lambda $userinput"
     cmd="$executable $argv"
     #echo $cmd
     mycmd=`$cmd`

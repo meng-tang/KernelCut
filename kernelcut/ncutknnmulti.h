@@ -4,7 +4,7 @@
 Table2D<Label> getswaplabeling(Table2D<int> labeling, int alpha, int beta);
 void applyswaplabeling(Table2D<int> & labeling, int alpha, int beta, Table2D<Label> swaplabeling);
 bool ncutswap(const Image & image, Table2D<int> & solution,Table2D<int> & knntable,int KNN_K, double w_smooth, Table2D<int> hardconstraints, int alpha, int beta);
-Table2D<int> ncutknnmultisegmentation(const Image & image, Table2D<int> & knntable, double w_smooth, Table2D<int> initlabeling, int numColor){
+Table2D<int> ncutknnmultisegmentation(const Image & image, Table2D<int> & knntable, double w_smooth, Table2D<int> initlabeling,  bool hardconstraintsflag, int numColor){
     int KNN_K = knntable.getHeight();
     int img_w = image.img_w;
     int img_h = image.img_h;
@@ -14,8 +14,8 @@ Table2D<int> ncutknnmultisegmentation(const Image & image, Table2D<int> & knntab
     }
     Table2D<int> solution = initlabeling;
     Table2D<int> hardconstraints = initlabeling;
-    hardconstraints.reset(-1);
-    
+    if(false == hardconstraintsflag)
+        hardconstraints.reset(-1);
     // initial solution is not complete
     if(countintable(solution,-1)>0){
     vector<Table2D<double> > w_data(numColor);
@@ -30,7 +30,7 @@ Table2D<int> ncutknnmultisegmentation(const Image & image, Table2D<int> & knntab
                     solution[i][j] = c;
                 }
             }
-			if(hardconstraints[i][j] >=0) solution[i][j]=initlabeling[i][j];
+	    if(hardconstraints[i][j] >=0) solution[i][j]=initlabeling[i][j];
         }
     }
     }

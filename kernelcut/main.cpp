@@ -140,7 +140,7 @@ int main(int argc, char * argv[])
         }
         //image.addboxsmooth(getROI(hardconstraints,NONE));
     }
-    else if((SEEDS == userinput) && (method != NCUTKNNMULTI)){
+    else if((SEEDS == userinput) && (method == NCUTKNNBINARY)){
         initlabeling = getinitlabelingFB(loadImage<RGB>((dbdir+string("/seeds/")+string(imgname) + string(".bmp")).c_str()), red, blue);
         hardconstraints = initlabeling;
     }
@@ -158,7 +158,7 @@ int main(int argc, char * argv[])
     }
         
     Table2D<int> initlabeling_multi(imgw,imgh,0); // for multilabel
-    RGB colors[6] = {white,red,green,blue,black,navy};
+    RGB colors[6] = {white,red,blue,green,black,navy};
     if(method == NCUTKNNMULTI){
         if(userinput == SEEDS)
             initlabeling_multi = getinitlabelingMULTI(loadImage<RGB>((dbdir+string("/seedsmulti/")+string(imgname) + string(".bmp")).c_str()), colors, numSegments);
@@ -198,7 +198,7 @@ int main(int argc, char * argv[])
         knntable.resize(1,1);
     }
     else if(method == NCUTKNNMULTI){
-        solution_multi = ncutknnmultisegmentation(image, knntable, w_smooth, initlabeling_multi, numSegments);
+        solution_multi = ncutknnmultisegmentation(image, knntable, w_smooth, initlabeling_multi, hardconstraintsflag, numSegments);
         knntable.resize(1,1);
     }
     clock_t finish = clock();
