@@ -34,12 +34,16 @@ Compute KNN graph for joint LAB + XY + M space
 matlab -nojvm -nosplash -nodisplay -r "cd motionsegmentation/ducks01; getsubpixelimages; exit();"
 matlab -nojvm -nosplash -nodisplay -r "cd motionsegmentation/ducks01; computeknn; exit()"
 ```
+(Visualization of KNN graph is by clicking on image pixel, simply run motionsegmentation/visualizeknnbyclick.m)
+
 Go to motionsegmentation/motion.sh, change codepath, and run script
 ```{r, engine='bash'}
 chmod +x ./motionsegmentation/motion.sh
 ./motionsegmentation/motion.sh
 ```
 Output segmentations are in the directory "motionsegmentation/ducks01/output".
+
+(note that if initialized from seeds, the colors has to be of the following: {white,red,blue,green,black,navy})
 
 ## Image Clustering using Kernel Cut and Spectral Cut##
 Download images:  
