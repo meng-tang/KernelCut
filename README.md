@@ -8,7 +8,7 @@ The CORE of our algorithm is linearization or unary bound for Normalized Cut (NC
 Simple implementation of such linearization is given in a FEW lines in "matlab/KernelBound.m". <br />
 The function **[ unaries ] = KernelBound( A, K, current_clustering)** simply takes affinity, cluster number and current clustering and gives unary terms.<br />
 Example of optimizing NC or AA (avearge association) ONLY is in "matlab/syntheticclustering.m"<br />
-![optional caption text](matlab/NC_init.png)![optional caption text](matlab/NC_clustering.png)![optional caption text](matlab/NC_energy.png)
+![init](matlab/NC_init.png =200x)![clustering](matlab/NC_clustering.png =200x)![energy](matlab/NC_energy.png =200x)
 
 ## Motion Segmentation using KernelCut ##
 Input image frames: directory "motionsegmentation/ducks01/images"  
