@@ -4,7 +4,7 @@
 genringkernelandinit;
 itrnum = 0;
 energies = [];
-energy_type = 'AA'; % 'NC' or 'AA'
+energy_type = 'NC'; % 'NC' or 'AA'
 while 1
     % current energy
     if strcmp(energy_type, 'NC')
