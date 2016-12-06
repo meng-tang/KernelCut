@@ -1,5 +1,5 @@
-db = 'fencing';
-imgname = 'ft_040';
+db = 'ducks01';
+imgname = 'ducks01_0300';
 global rgbimg
 rgbimg = imread([db '/images/' imgname '.bmp']);
 global H
