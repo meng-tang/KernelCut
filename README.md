@@ -16,6 +16,9 @@ Example of optimizing NC or AA (avearge association) ONLY is in **"matlab/synthe
 Input image frames: directory "motionsegmentation/ducks01/images"  
 Initial Strokes for the first frame: directory "motionsegmentation/ducks01/seedsmulti"  
 
+<img src="motionsegmentation/ducks01/images/ducks01_0300.bmp" alt="" width="350"/>
+<img src="motionsegmentation/ducks01/output/ducks01_0300_ncutknnmulti_s0.5.bmp" alt="" width="350"/>
+
 Build dependency libraries (maxflow and easybmp)  
 ```{r, engine='bash'}
 cd libs
@@ -53,43 +56,5 @@ Output segmentations are in the directory "motionsegmentation/ducks01/output".
 
 (note that if initialized from seeds, the colors has to be of the following: {white,red,blue,green,black,navy})
 
-## Image Clustering using Kernel Cut and Spectral Cut##
-Download images:  
 
-    cd imageclustering
-    wget http://people.csail.mit.edu/torralba/code/spatialenvelope/spatial_envelope_256x256_static_8outdoorcategories.zip
-    unzip spatial_envelope_256x256_static_8outdoorcategories.zip -d images
-    mv images/spatial_envelope_256x256_static_8outdoorcategories/* images/
-    
-Download feature extractor:  
-
-    wget http://vision.stanford.edu/projects/objectbank/MATLAB_release.zip
-    unzip MATLAB_release.zip -d ./
-    mv MATLAB_release object-bank
-Change the variable "modelpath" in getFeatureOB.m accordingly and move the file:  
-
-    mv getFeatureOB.m object-bank/code/partless/
-    
-Extract features and compute Gaussian kernel:  
-
-    matlab -nojvm -nosplash -nodisplay -r "computegaussiankernel; exit()"
-Compute eigenvalues:  
-
-    matlab -nojvm -nosplash -nodisplay -r "eigen_labelme; exit()"
-Prepare ground truth labels:  
-
-    matlab -nojvm -nosplash -nodisplay -r "preparelabels; exit()"
-Spectral clustering:  
-
-    matlab -nojvm -nosplash -nodisplay -r "sc_labelme; exit()"
-Spectral cut:  
-
-    matlab -nojvm -nosplash -nodisplay -r "sc_labelme; exit()"
-Kernel k-means:  
-
-    matlab -nojvm -nosplash -nodisplay -r "kkm_labelme; exit()"
-Kernel cut:  
-
-    matlab -nojvm -nosplash -nodisplay -r "kcut_labelme; exit()"
-These matlab scripts will report NMI (normalized mutual information) values for clustering obtained.
 
