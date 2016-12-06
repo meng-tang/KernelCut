@@ -49,8 +49,8 @@ matlab -nojvm -nosplash -nodisplay -r "cd motionsegmentation/ducks01; computeknn
 
 Go to motionsegmentation/motion.sh, change codepath, and run script
 ```{r, engine='bash'}
-chmod +x ./motionsegmentation/motion.sh
-./motionsegmentation/motion.sh
+chmod +x ./motionsegmentation/motion_ducks01.sh
+./motionsegmentation/motion_ducks01.sh
 ```
 Output segmentations are in the directory "motionsegmentation/ducks01/output".
 
