@@ -1,4 +1,4 @@
-This is the codes for the paper:
+This is the code for the paper:
 
 	"Normalized Cut Meets MRF"
 	Meng Tang, Dmitrii Marin, Ismail Ben Ayed, Yuri Boykov
@@ -7,7 +7,7 @@ This is the codes for the paper:
 The CORE of our algorithm is linearization or unary bound for Normalized Cut (NC).<br />
 Simple implementation of such linearization is given in a FEW lines in "matlab/KernelBound.m". <br />
 The function **[ unaries ] = KernelBound( A, K, current_clustering)** simply takes affinity, cluster number and current clustering and gives unary terms.<br />
-Example of optimizing NC or AA (avearge association) ONLY is in "matlab/syntheticclustering.m"<br />
+Example of optimizing NC or AA (avearge association) ONLY is in "matlab/syntheticclustering.m". Below is sample result with NC:<br />
 <span><img src="matlab/NC_init.png" alt="" width="400"/>
 <img src="matlab/NC_clustering.png" alt="" width="400"/>
 <img src="matlab/NC_energy.png" alt="" width="400"/></span>
