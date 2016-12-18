@@ -5,9 +5,16 @@ This is the code for the paper:
 	In European Conference on Computer Vision (ECCV), Amsterdam, the Netherlands, October, 2016
 
 The CORE of our algorithm is linearization or unary bound for Normalized Cut (NC).<br />
-Simple implementation of such linearization is given in a FEW lines in "matlab/KernelBound.m". <br />
-The function **[ unaries ] = KernelBound( A, K, current_clustering)** simply takes affinity, cluster number and current clustering and gives unary terms.<br />
-Example of optimizing NC or AA (avearge association) ONLY is in **"matlab/syntheticclustering.m"**. Below is sample result with NC:<br />
+Simple implementation of such linearization is given in a FEW lines in "matlab/KernelBound.m" and "matlab/SpectralBound.m". <br />
+
+```{r, engine='matlab'}
+[ unaries ] = KernelBound( A, K, current_clustering)
+% KernelBound simply simply takes affinity, cluster number and current clustering and gives unary terms.
+[ unaries ] = SpectralBound( A, K, dim, current_clustering)
+% SpectralBound requires an extra argument dim, the dimensionality of embedding
+% when dim is the number of data points, SpectralBound is algorithmically equivalent to KernelCut
+```
+Example of optimizing NC or AA (avearge association) ONLY is in **"matlab/syntheticclustering.m"**. Below is sample result with KernelCut for NC:<br />
 <span><img src="matlab/NC_init.png" alt="" width="350"/>
 <img src="matlab/NC_clustering.png" alt="" width="350"/>
 <img src="matlab/NC_energy.png" alt="" width="350"/></span>

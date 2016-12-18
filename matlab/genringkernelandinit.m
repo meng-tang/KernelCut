@@ -1,5 +1,5 @@
 % generate data points (rings)
-rng(200);
+rng(100);
 randdata = rand(10000,2);
 theta = pi*rand(300,1);
 distances = rand(300,1)*4+7;
