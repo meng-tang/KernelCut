@@ -9,10 +9,10 @@ Simple implementation of such linearization is given in a FEW lines in "matlab/K
 
 ```{r, engine='matlab'}
 [ unaries ] = KernelBound( A, K, current_clustering)
-% KernelBound simply simply takes affinity, cluster number and current clustering and gives unary terms.
+% KERNELBOUND simply takes affinity, cluster number and current clustering and gives unary terms.
 [ unaries ] = SpectralBound( A, K, dim, current_clustering)
-% SpectralBound requires an extra argument dim, the dimensionality of embedding
-% when dim is the number of data points, SpectralBound is algorithmically equivalent to KernelCut
+% SPECTRALBOUND requires an extra argument dim, the dimensionality of spectral embedding
+% When dim is the number of data points, SpectralBound is algorithmically EQUIVALENT to KernelCut.
 ```
 Example of optimizing NC or AA (avearge association) ONLY is in **"matlab/syntheticclustering.m"**. Below is sample result with KernelCut for NC:<br />
 <span><img src="matlab/NC_init.png" alt="" width="350"/>
