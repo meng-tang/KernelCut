@@ -7,7 +7,7 @@ This is the code for the paper:
 The CORE of our algorithm is linearization or unary bound for Normalized Cut (NC).<br />
 Simple implementation of such linearization is given in a FEW lines in "matlab/KernelBound.m" and "matlab/SpectralBound.m". <br />
 
-```{r, engine='matlab'}
+```matlab
 [ unaries ] = KernelBound( A, K, current_clustering)
 % KERNELBOUND simply takes affinity, cluster number and current clustering and gives unary terms.
 [ unaries ] = SpectralBound( A, K, dim, current_clustering)
