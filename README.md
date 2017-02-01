@@ -64,7 +64,7 @@ Output segmentations are in the directory "motionsegmentation/ducks01/output".
 (note that if initialized from seeds, the colors has to be of the following: {white,red,blue,green,black,navy})
 
 ## KernelCut in Python ##
-Python implementation of KernelCut for binary segmentation is provided. See directory 'Python'.
+Python implementation of KernelCut for binary segmentation is provided. See directory 'PyKernelCut'.
 Example Usage:
 ```{r, engine='python'}
 cd Python
