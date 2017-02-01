@@ -27,3 +27,4 @@ $python segmentation.py -i 0_5_5303.bmp -b 50 100 200 200
 $python segmentation.py -i 314016.jpg -b 10 80 300 300 --hard
 
 ```
+Note that To use PyKernelCut several dependencies (skimage, scipy, [PyMaxflow](https://github.com/pmneila/PyMaxflow)) have to be installed.
