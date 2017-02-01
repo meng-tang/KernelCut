@@ -21,10 +21,10 @@ Options:
                         maximum number of iteration, defualt 80
   --xyscale=XYSCALE     scale of x,y coordinate for KNN graph, defualt 0
 
-$python segmentation.py -i 124084.jpg -b 10 20 300 300 -k 100
-$python segmentation.py -i 0_5_5303.bmp -b 50 100 200 200 -s 0
-$python segmentation.py -i 0_5_5303.bmp -b 50 100 200 200
-$python segmentation.py -i 314016.jpg -b 10 80 300 300 --hard
+$ python segmentation.py -i 124084.jpg -b 10 20 300 300 -k 100
+$ python segmentation.py -i 0_5_5303.bmp -b 50 100 200 200 -s 0
+$ python segmentation.py -i 0_5_5303.bmp -b 50 100 200 200
+$ python segmentation.py -i 314016.jpg -b 10 80 300 300 --hard
 
 ```
 Note that To use PyKernelCut several dependencies (skimage, scipy, [PyMaxflow](https://github.com/pmneila/PyMaxflow)) have to be installed.
