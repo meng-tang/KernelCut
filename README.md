@@ -67,7 +67,7 @@ Output segmentations are in the directory "motionsegmentation/ducks01/output".
 Python implementation of KernelCut for binary segmentation is provided. See directory 'PyKernelCut'.
 Example Usage:
 ```{r, engine='python'}
-cd Python
+cd PyKernelCut
 python segmentation.py -h
 python segmentation.py -i 124084.jpg -b 10 20 300 300 -k 100
 python segmentation.py -i 0_5_5303.bmp -b 50 100 200 200 -s 0
