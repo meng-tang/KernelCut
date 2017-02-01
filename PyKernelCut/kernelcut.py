@@ -108,7 +108,7 @@ def KernelCut(image, opt):
     boxwidth = opt.box[3]
     connecttype = 8
     gridvariance = computeGridVariance(np.asarray(image), connecttype)
-    print "Grid variance is: ", gridvariance
+    #print "Grid variance is: ", gridvariance
     
     # intial segmentation
     initsegmentation = np.zeros([height, width],dtype=int)
