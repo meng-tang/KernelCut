@@ -31,15 +31,15 @@ def parsearguments():
     parser.add_option("-b", "--box", dest="box",
                      help="bounding box (top, left, height, width)",type="int", nargs=4)
     parser.add_option("--hard", dest="hardconstraintsflag",
-                     help="enforce hard constraints, default off",action="store_true",default=False)
+                     help="enforce hard constraints, default off", action="store_true", default=False)
     parser.add_option("-k", "--knn", dest="KNN_K",
-                     help="K nearest neighbors, defualt 400",type="int",default=400)
+                     help="K nearest neighbors, defualt 400",type="int", default=400)
     parser.add_option("-s", "--smoothness", dest="weight_smoothness",
-                     help="weight of smoothness term, defualt 0.0001", type="float",default=0.0001)
+                     help="weight of smoothness term, default 0.0001", type="float", default=0.0001)
     parser.add_option("--maxitr", dest="MAX_ITERATION",
-                     help="maximum number of iteration, defualt 80", type="int",default=80)
+                     help="maximum number of iteration, default 80", type="int", default=80)
     parser.add_option("--xyscale", dest="xyscale",
-                     help="scale of x,y coordinate for KNN graph, defualt 0", type="float",default=0)
+                     help="scale of x,y coordinate for KNN graph, default 0", type="float", default=0)
 
     (opt, args) = parser.parse_args()
     print 'image directory is ', opt.imagedir
