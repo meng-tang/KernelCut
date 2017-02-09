@@ -1,0 +1,12 @@
+# This file lists the python dependencies, 
+# it is meant to be used with pip (and/or possibly virtualenv, pbundler, etc)
+# See http://pip.readthedocs.org/en/latest/user_guide.html#requirements-files
+# You will probably want to run 
+# something similar to `pip install -r requirements.txt`
+# or `pip install --user -r requirements.txt`
+
+scikit-learn
+scikit-image
+PyMaxflow
+
+
