@@ -97,7 +97,7 @@ def ConstructKNNGraph(image, KNN_K=400, xyscale=0, samplerate=5):
     col = neighbors.flatten()
     data = np.ones(height*width*KNN_K/samplerate, dtype=np.float)
     affinity_matrix = sparse.csr_matrix((data, (row, col)), shape=(height*width,height*width),dtype=np.float) 
-    affinity_matrix = (affinity_matrix + affinity_matrix.transpose(True)) /2
+    affinity_matrix = (affinity_matrix + affinity_matrix.transpose(copy=True)) /2
     return affinity_matrix
 
 def KernelCut(image, opt):
