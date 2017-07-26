@@ -1,12 +1,12 @@
 begin=$(date +"%s")
-codepath=/home/mtang73/Desktop/sharcnet/public_code/
+codepath=/home/meng/Desktop/repositories/KernelCut_ECCV16/
 executable=$codepath/kernelcut/main
 exppath=$codepath/motionsegmentation/ducks01
 outdir=$codepath/motionsegmentation/ducks01/output
 
 # weight of smoothness term
 lambda="0.5"
-for ((frameid=0; frameid<40; frameid++))
+for ((frameid=0; frameid<41; frameid++))
 do
     frame=`echo "scale=2;$frameid+300"|bc`
     preframe=`echo "scale=2;$frameid+299"|bc`
