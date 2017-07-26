@@ -25,10 +25,11 @@ Initial Strokes for the first frame: directory "motionsegmentation/ducks01/seeds
 Binary example: Input image frames: directory "motionsegmentation/horses01/images"  
 Initial Strokes for the first frame: directory "motionsegmentation/horses01/seeds"  
 
-<img src="motionsegmentation/ducks01/images/ducks01_0300.bmp" alt="" width="250"/>
-<img src="motionsegmentation/horses01/images/horses01_0241.bmp" alt="" width="250"/>
-<img src="motionsegmentation/ducks01/output/ducks01_0300_ncutknnmulti_s0.5.bmp" alt="" width="350"/>
-<img src="motionsegmentation/horses01/output/horses01_0241_ncutknnbinary_s0.5.bmp" alt="" width="350"/>
+<span><img src="motionsegmentation/ducks01/images/ducks01_0300.bmp" alt="" height="150"/>
+<img src="motionsegmentation/ducks01/output/ducks01_0300_ncutknnmulti_s0.5.bmp" alt="" height="150"/>
+</span><br/>
+<span><img src="motionsegmentation/horses01/images/horses01_0241.bmp" alt="" height="150"/>
+<img src="motionsegmentation/horses01/output/horses01_0241_ncutknnbinary_s0.5.bmp" alt="" height="150"/></span>
 
 Build dependency libraries (maxflow and easybmp)  
 ```{r, engine='bash'}
