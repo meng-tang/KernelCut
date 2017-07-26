@@ -19,3 +19,4 @@ for i=1:(LengthFiles-1)
     [status,cmdout] = system(command)
     disp(cmdout)
 end
+showldof;
