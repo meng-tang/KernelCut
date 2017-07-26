@@ -20,11 +20,15 @@ Example of optimizing NC or AA (avearge association) ONLY is in **"matlab/synthe
 <img src="matlab/NC_energy.png" alt="" width="350"/></span>
 
 ## Motion Segmentation using KernelCut ##
-Input image frames: directory "motionsegmentation/ducks01/images"  
+Multilabel example: Input image frames: directory "motionsegmentation/ducks01/images"  
 Initial Strokes for the first frame: directory "motionsegmentation/ducks01/seedsmulti"  
+Binary example: Input image frames: directory "motionsegmentation/horses01/images"  
+Initial Strokes for the first frame: directory "motionsegmentation/horses01/seeds"  
 
-<img src="motionsegmentation/ducks01/images/ducks01_0300.bmp" alt="" width="350"/>
+<img src="motionsegmentation/ducks01/images/ducks01_0300.bmp" alt="" width="250"/>
+<img src="motionsegmentation/horses01/images/horses01_0241.bmp" alt="" width="250"/>
 <img src="motionsegmentation/ducks01/output/ducks01_0300_ncutknnmulti_s0.5.bmp" alt="" width="350"/>
+<img src="motionsegmentation/horses01/output/horses01_0241_ncutknnbinary_s0.5.bmp" alt="" width="350"/>
 
 Build dependency libraries (maxflow and easybmp)  
 ```{r, engine='bash'}
@@ -62,6 +66,8 @@ $ ./motionsegmentation/motion_ducks01.sh
 Output segmentations are in the directory "motionsegmentation/ducks01/output".
 
 (note that if initialized from seeds, the colors has to be of the following: {white,red,blue,green,black,navy})
+
+Binary example "horses01" is similar to multilabel example "ducks01".
 
 ## KernelCut in Python ##
 Python implementation of KernelCut for binary segmentation is provided. See directory 'PyKernelCut'.
