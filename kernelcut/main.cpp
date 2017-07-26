@@ -207,7 +207,7 @@ int main(int argc, char * argv[])
     // save output
     if((outputdir!=NULL) &&( method != NCUTKNNMULTI))
         //savebinarylabeling(image.img, solution,(outputdir+string("/")+string(imgname) +"_s"+pch::to_string(w_smooth)+string(".bmp")).c_str());
-	savebinarylabeling(image.img, solution,(outputdir+string("/")+string(imgname) +string("_")+string(methodstr)+"_s"+pch::to_string(w_smooth)+string(".bmp")).c_str());
+	savebinarylabeling(image.img, solution,(outputdir+string("/")+string(imgname) +string("_")+string(methodstr)+"_s"+pch::to_string(w_smooth)+string(".bmp")).c_str(),true);
     if((outputdir!=NULL) &&( method == NCUTKNNMULTI))
 	savemultilabeling(solution_multi,(outputdir+string("/")+string(imgname) +string("_")+string(methodstr)+"_s"+pch::to_string(w_smooth)+string(".bmp")).c_str(), colors,image.img);
 
