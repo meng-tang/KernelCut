@@ -42,7 +42,7 @@ Download executable for optical flow
 $ wget http://lmb.informatik.uni-freiburg.de/resources/binaries/pami2010Linux64.zip
 $ unzip pami2010Linux64.zip -d libs/LDOF
 ```
-Compute optical flow
+Compute optical flow, flow and its visualization saved into opticalflow directory
 ```{r, engine='bash'}
 $ chmod +x libs/LDOF/ldof
 $ matlab -nojvm -nosplash -nodisplay -r "cd motionsegmentation/ducks01; computeopticalflow; exit()"

@@ -13,7 +13,7 @@ targetdir = 'knn';
 if 0==exist(targetdir,'dir')
     mkdir(targetdir);
 end
-for i=1:40
+for i=1:(LengthFiles-1)
     imgname=Files(i).name;
     imgname = imgname(1:(size(imgname,2)-4));
     if ~strcmp(imgname,whichimage)
