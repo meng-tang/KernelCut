@@ -2,7 +2,7 @@ Files = dir(['images' '/*.bmp']);
 LengthFiles = length(Files);
 mkdir('opticalflow');
 % convert all bmp images to ppm images
-for i=1:(LengthFiles-1)
+for i=1:LengthFiles
     imgname=Files(i).name;
     imgname = imgname(1:(size(imgname,2)-4));
     img = imread(['images/' imgname '.bmp']);
